@@ -18,7 +18,7 @@ app.add_middleware(
     allow_origins=['*']
 )
 
-@app.post("/captcha/")
+@app.post("/captcha")
 async def resolveCaptcha(svg:str = Body(..., embed=True), letter:str = Body(..., embed=True)):
     try:
         img = svg2img(svg)
@@ -33,3 +33,7 @@ async def resolveCaptcha(svg:str = Body(..., embed=True), letter:str = Body(...,
     except Exception as err:
         print(err)
         return {"message": "error"}
+
+@app.get("/health")
+async def healthCheck():
+    return {"message": "success"}
