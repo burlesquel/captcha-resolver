@@ -1,0 +1,8 @@
+CairoSVG==2.6.0
+fastapi==0.92.0
+keras==2.12.0rc0
+matplotlib==3.7.0
+numpy==1.23.5
+opencv_python==4.7.0.68
+Pillow==9.4.0
+scikit_learn==1.2.1
