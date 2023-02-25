@@ -18,7 +18,7 @@ def predict(captcha_svg):
         reshaped_img = img.reshape((1,) + img.shape)
         predictions = model.predict(reshaped_img)
         predicted_label = np.argmax(predictions) # Returns the most possible prediction.
-        predicted_label = labels[predicted_label]
+        predicted_label = labels[predicted_label].replace('_', '')
         print('letter: ', predicted_label)
         result.append(predicted_label)
     return result

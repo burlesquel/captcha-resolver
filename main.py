@@ -19,11 +19,9 @@ app.add_middleware(
 )
 
 @app.post("/captcha")
-async def resolveCaptcha(svg:str = Body(..., embed=True), letter:str = Body(..., embed=True)):
+async def resolveCaptcha(svg:str = Body(..., embed=True)):
     try:
         result = predict(svg)
-        for i,letter in enumerate(result):
-            result[i] = letter.replace('_', '')
         print(result)
         return {"message": "success", "result":result}
     except Exception as err:
