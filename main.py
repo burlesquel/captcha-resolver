@@ -6,7 +6,7 @@ from predict import predict
 import cv2 as cv
 import random
 import string
-import os
+
 
 def randomString(length):
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
@@ -21,14 +21,10 @@ app.add_middleware(
 @app.post("/captcha")
 async def resolveCaptcha(svg:str = Body(..., embed=True), letter:str = Body(..., embed=True)):
     try:
-        img = svg2img(svg)
-        img = cv.cvtColor(img, cv.COLOR_RGBA2BGRA)
-        result = predict(img)
+        result = predict(svg)
         for i,letter in enumerate(result):
             result[i] = letter.replace('_', '')
         print(result)
-        cv.imshow('img', img)
-        cv.waitKey(0)
         return {"message": "success", "result":result}
     except Exception as err:
         print(err)
