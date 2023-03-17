@@ -9,6 +9,7 @@ import string
 from extractletters import extract_letters
 from svgtopng import svg2img
 import os
+from uvicorn import run
 
 def randomString(length):
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
@@ -69,3 +70,6 @@ async def resolveCaptcha(svg: str = Body(..., embed=True), captcha_type: str = B
 async def healthCheck():
     return {"message": "success"}
 
+if __name__ == "__main__":
+	port = int(os.environ.get('PORT', 5000))
+	run(app, host="0.0.0.0", port=port)

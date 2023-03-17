@@ -22,4 +22,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Start the application
-CMD ["uvicorn", "main:app", "--reload"]
+CMD ["python", "main.py"]
