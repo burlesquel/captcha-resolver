@@ -62,7 +62,7 @@ print('model is ready')
 
 model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy'])
 
-model.fit(train_images,  train_labels, batch_size=32, validation_data=(val_images, val_labels), epochs=10, verbose=2)
+model.fit(train_images,  train_labels, batch_size=16, validation_data=(val_images, val_labels), epochs=7, verbose=2)
 
 model.save('test.h5')
 

@@ -1,15 +1,19 @@
-FROM python:3.11.2
+FROM python:3.10.6
 
-# Upgrade pip
-RUN pip install --upgrade pip
+# Maintainer info
+LABEL maintainer="batumanav@gmail.com"
 
-# Set working directory
-WORKDIR /
+# Make working directories
+RUN  mkdir -p  /captcha-recognition-api
+WORKDIR  /captcha-recognition-api
 
-# Copy requirements file
+# Upgrade pip with no cache
+RUN pip install --no-cache-dir -U pip
+
+# Copy application requirements file to the created working directory
 COPY requirements.txt .
 
-# Install dependencies
+# Install application dependencies from the requirements file
 RUN pip install -r requirements.txt
 
 # Copy the rest of the application files

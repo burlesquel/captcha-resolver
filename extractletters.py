@@ -24,13 +24,16 @@ def extract_letters(img, type="normal", dataset_mode=False):
     elif type == "math":
         img = cv.resize(img, (250, 150))
         if dataset_mode:  # in dataset_mode we only get the + sign in the middle to get + samples
-            y, x = math_character_coordinate[1]
-            symbol = img[y: y + 40, x: x + 40]  # Generate
-            symbol = cv.cvtColor(symbol, cv.COLOR_BGR2GRAY)
-            # Applying adaptive threshold due to strong color variation.
-            symbol = cv.adaptiveThreshold(
-                symbol, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 3, 0)
-            return symbol
+            chars = []
+            for coordinate in math_character_coordinate:
+                y, x = coordinate
+                symbol = img[y: y + 40, x: x + 40]  # Generate
+                symbol = cv.cvtColor(symbol, cv.COLOR_BGR2GRAY)
+                # Applying adaptive threshold due to strong color variation.
+                symbol = cv.adaptiveThreshold(
+                    symbol, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 3, 0)
+                chars.append(symbol)
+            return chars
         else:
             chars = []
             for coordinate in math_character_coordinate:
@@ -41,8 +44,5 @@ def extract_letters(img, type="normal", dataset_mode=False):
                 char = cv.adaptiveThreshold(
                     char, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 3, 0)
                 chars.append(char)
-                for char in chars:
-                    cv.imshow('char', char)
-                    cv.waitKey(0)
             print('chars length: ', len(chars))
             return chars
