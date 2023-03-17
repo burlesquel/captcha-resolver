@@ -1,5 +1,3 @@
-RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
-
 FROM python:3.10.6
 
 # Maintainer info
@@ -8,6 +6,8 @@ LABEL maintainer="batumanav@gmail.com"
 # Make working directories
 RUN  mkdir -p  /captcha-recognition-api
 WORKDIR  /captcha-recognition-api
+
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
 # Upgrade pip with no cache
 RUN pip install --no-cache-dir -U pip
