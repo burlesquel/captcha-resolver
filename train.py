@@ -1,7 +1,7 @@
 import numpy as np
-from keras.utils import to_categorical
 import os
 import cv2 as cv
+from keras.utils import to_categorical
 from keras.models import Sequential
 from keras.layers import  Dense, Flatten, Conv2D, MaxPool2D
 from keras.models import load_model
@@ -13,7 +13,7 @@ print('modules imported')
 
 img_size = (40,40)
 
-classes=['A_', 'B_', 'C_', 'D_', 'E_', 'F_', 'G_', 'H_', 'I_', 'J_', 'K_', 'L_', 'M_', 'N_', 'O_', 'P_', 'Q_', 'R_', 'S_', 'T_', 'U_', 'V_', 'W_', 'X_', 'Y_', 'Z_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+classes=['A_', 'B_', 'C_', 'D_', 'E_', 'F_', 'G_', 'H_', 'I_', 'J_', 'K_', 'L_', 'M_', 'N_', 'O_', 'P_', 'Q_', 'R_', 'S_', 'T_', 'U_', 'V_', 'W_', 'X_', 'Y_', 'Z_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+']
 
 train_path = 'dataset'
 
@@ -64,7 +64,7 @@ model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentro
 
 model.fit(train_images,  train_labels, batch_size=32, validation_data=(val_images, val_labels), epochs=10, verbose=2)
 
-model.save('captcha_recognition4.h5')
+model.save('test.h5')
 
 
 
