@@ -1,75 +1,53 @@
-from fastapi import FastAPI, Body
-from fastapi.middleware.cors import CORSMiddleware
-# if cairo dll file error throws, install pipwin with pip, and install cairocffi via pipwin: pip install pipwin, pipwin install cairocffi
-from svgtopng import svg2img
-from predict import predict
+
 import cv2 as cv
-import random
-import string
-from extractletters import extract_letters
-from svgtopng import svg2img
-import os
-from uvicorn import run
+import matplotlib.pyplot as plt
+from constants import five_character_coordinates, four_character_coordinates, math_character_coordinates
+from raw_predict import raw_predict
+from utils import find_highest_averaged_predictions
 
-def randomString(length):
-    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+all_coordinates = five_character_coordinates + \
+    four_character_coordinates + math_character_coordinates
+all_coordinates = sorted(all_coordinates, key=lambda x: x[1])
 
-dataset_dir = 'dataset'
+coordinate_dictionary = {
+    "five": five_character_coordinates,
+    "four": four_character_coordinates,
+    "math": math_character_coordinates
+}
 
-app = FastAPI()
-
-origins = ["*"]
-methods = ["*"]
-headers = ["*"]
-
-app.add_middleware(
-    CORSMiddleware, 
-    allow_origins = origins,
-    allow_credentials = True,
-    allow_methods = methods,
-    allow_headers = headers    
-)
-
-@app.post("/captcha")
-async def resolveCaptcha(svg: str = Body(..., embed=True)):
-    try:
-        result = predict(svg, type='math')
-        if result[1] == "+": #If the second character of the result is +, this is the math captcha.
-            return {"message": "success", "result": result}
-        else:
-            result = predict(svg)
-            print(result)
-            return {"message": "success", "result": result}
-    except Exception as err:
-        print(err)
-        return {"message": "error"}
-
-
-@app.post("/dataset")
-async def resolveCaptcha(svg: str = Body(..., embed=True), captcha_type: str = Body(..., embed=True), text: str = Body(..., embed=True)):
-    if not os.path.exists('dataset2'):
-        os.mkdir('dataset2')
-    img = svg2img(svg)
-    result = extract_letters(img, type=captcha_type, dataset_mode=True)
-    if captcha_type == "math":
-        for i, char in enumerate(result):
-            label = text[i]
-            randLetter = ''.join(random.choice(string.ascii_letters) for i in range(5))
-            if not os.path.exists('dataset2/'+label):
-                os.mkdir('dataset2/' + label)
-            cv.imwrite('dataset2/'+ label +'/'+randLetter + '.png', char)
-    elif captcha_type == "normal":
-        for letter in result:
-            if not os.path.exists('dataset2/'+text):
-                os.mkdir('dataset2/'+text)
-            randLetter = ''.join(random.choice(string.ascii_letters) for i in range(5))
-            cv.imwrite('dataset2/'+ text +'/'+randLetter + '.png', letter)
+def predict(image=None, mode=None):
+    img = None
+    if True:
+        img = image
+    else:
+        img = cv.imread('captchas/fourcaptcha.png', cv.IMREAD_GRAYSCALE)
+    img = cv.resize(img, (250, 150))
+    if not mode:
+        predictions = []
+        for coordinate_plan in [five_character_coordinates, four_character_coordinates, math_character_coordinates]:
+            for coord in coordinate_plan:
+                y, x = coord
+                letter = img[y: y + 40, x: x + 40]  # Crop
+                print('looking for ', coord)
+                # plt.imshow(letter)
+                # plt.show()
+                prediction = raw_predict(letter)
+                predictions.append(prediction)
+        possible_predictions = find_highest_averaged_predictions(
+            [predictions[:5], predictions[5:9], predictions[9:]])
+        print(possible_predictions)
+        print([prediction[0] for prediction in possible_predictions])
+        return [prediction[0] for prediction in possible_predictions]
+    elif mode == "five" or mode == "four" or mode=="math":
+        predictions = []
+        for coord in coordinate_dictionary[mode]:
+            y, x = coord
+            letter = img[y: y + 40, x: x + 40]  # Crop
+            prediction = raw_predict(letter)
+            predictions.append(prediction)
+        print([prediction[0] for prediction in predictions])
+        return [prediction[0] for prediction in predictions]
 
 
-@app.get("/health")
-async def healthCheck():
-    return {"message": "success"}
 
-if __name__ == "__main__":
-	port = int(os.environ.get('PORT', 5000))
-	run(app, host="0.0.0.0", port=port)
+# predict(mode="four")

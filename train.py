@@ -8,6 +8,7 @@ from keras.models import load_model
 from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
+from preprocess import preprocess
 
 print('modules imported')
 
@@ -28,10 +29,11 @@ for i, cls in enumerate(classes):
     for image_filename in os.listdir(class_path):
         image_path = os.path.join(class_path, image_filename)
         image = cv.imread(image_path, cv.IMREAD_GRAYSCALE)
-        image = cv.adaptiveThreshold(image, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 3, 0)
-        image_array = np.array(image, dtype=np.float32)
-        image_array /= 255.0 # Converts each pixel value to either 0 or 1 by their distance to both.
-        images.append(image_array)
+        # image = cv.adaptiveThreshold(image, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 3, 0)
+        # image_array = np.array(image, dtype=np.float32)
+        # image_array /= 255.0 # Converts each pixel value to either 0 or 1 by their distance to both.
+        preprocessed_image = preprocess(image)
+        images.append(preprocessed_image)
         labels.append(i)
 
 images = np.array(images)
@@ -62,7 +64,7 @@ print('model is ready')
 
 model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy'])
 
-model.fit(train_images,  train_labels, batch_size=16, validation_data=(val_images, val_labels), epochs=7, verbose=2)
+model.fit(train_images,  train_labels, batch_size=32, validation_data=(val_images, val_labels), epochs=10, verbose=2)
 
 model.save('test.h5')
 
