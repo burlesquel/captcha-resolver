@@ -14,7 +14,7 @@ print('modules imported')
 
 img_size = (40,40)
 
-classes=['A_', 'B_', 'C_', 'D_', 'E_', 'F_', 'G_', 'H_', 'I_', 'J_', 'K_', 'L_', 'M_', 'N_', 'O_', 'P_', 'Q_', 'R_', 'S_', 'T_', 'U_', 'V_', 'W_', 'X_', 'Y_', 'Z_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+']
+classes=['A_', 'B_', 'C_', 'D_', 'E_', 'F_', 'G_', 'H_', 'I_', 'J_', 'K_', 'L_', 'M_', 'N_', 'O_', 'P_', 'Q_', 'R_', 'S_', 'T_', 'U_', 'V_', 'W_', 'X_', 'Y_', 'Z_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 train_path = 'dataset'
 
@@ -29,9 +29,6 @@ for i, cls in enumerate(classes):
     for image_filename in os.listdir(class_path):
         image_path = os.path.join(class_path, image_filename)
         image = cv.imread(image_path, cv.IMREAD_GRAYSCALE)
-        # image = cv.adaptiveThreshold(image, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 3, 0)
-        # image_array = np.array(image, dtype=np.float32)
-        # image_array /= 255.0 # Converts each pixel value to either 0 or 1 by their distance to both.
         preprocessed_image = preprocess(image)
         images.append(preprocessed_image)
         labels.append(i)
@@ -66,7 +63,7 @@ model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentro
 
 model.fit(train_images,  train_labels, batch_size=32, validation_data=(val_images, val_labels), epochs=10, verbose=2)
 
-model.save('test.h5')
+model.save('new_model.h5')
 
 
 

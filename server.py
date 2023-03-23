@@ -34,34 +34,26 @@ app.add_middleware(
 
 
 @app.post("/svg")
-async def resolveCaptchaFromSvg(svg: str = Body(..., embed=True), mode: str = Body(None, embed=True)):
+async def resolveCaptchaFromSvg(svg: str = Body(..., embed=True)):
     try:
         img = svg2img(svg)
-        return {"status": True, "message": "success", "data": predict(img, mode)}
+        return {"status": True, "message": "success", "data": predict(img)}
     except Exception as err:
-        raise HTTPException(status_code=501, detail='An exception has ocurred.')
+        print(err)
+        raise HTTPException(status_code=502, detail='An exception has ocurred.')
 
 @app.post("/dataset")
-async def resolveCaptcha(svg: str = Body(..., embed=True), captcha_type: str = Body(..., embed=True), text: str = Body(..., embed=True)):
-    if not os.path.exists('dataset2'):
-        os.mkdir('dataset2')
+async def resolveCaptcha(svg: str = Body(..., embed=True), text = Body(..., embed=True)):
+    if not os.path.exists('dataset'):
+        os.mkdir('dataset')
     img = svg2img(svg)
-    result = extract_letters(img, type=captcha_type, dataset_mode=True)
-    if captcha_type == "math":
-        for i, char in enumerate(result):
-            label = text[i]
-            randLetter = ''.join(random.choice(string.ascii_letters)
-                                 for i in range(5))
-            if not os.path.exists('dataset2/'+label):
-                os.mkdir('dataset2/' + label)
-            cv.imwrite('dataset2/' + label + '/'+randLetter + '.png', char)
-    elif captcha_type == "normal":
-        for letter in result:
-            if not os.path.exists('dataset2/'+text):
-                os.mkdir('dataset2/'+text)
-            randLetter = ''.join(random.choice(string.ascii_letters)
-                                 for i in range(5))
-            cv.imwrite('dataset2/' + text + '/'+randLetter + '.png', letter)
+    letters = extract_letters(img)
+    for i, letter in enumerate(letters):
+        label = text[i]
+        randLetter = ''.join(random.choice(string.ascii_letters) for y in range(5))
+        if not os.path.exists('dataset/'+label):
+            os.mkdir('dataset/' + label)
+        cv.imwrite('dataset/' + label + '/'+randLetter + '.png', letter)
 
 
 @app.post("/svg2png")

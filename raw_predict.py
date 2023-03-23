@@ -2,7 +2,7 @@ import numpy as np
 from preprocess import preprocess
 from keras.models import load_model
 from constants import labels
-model = load_model('captcha_recognition.h5')
+model = load_model('model.h5')
 
 def raw_predict(letter):
     preprocessed_img = preprocess(letter)
