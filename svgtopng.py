@@ -4,9 +4,6 @@ from PIL import Image
 from io import BytesIO
 import numpy as np 
 # Abstraction of svg2png library.
-from extractletters import extract_letters
-from current_svg import original
-import cv2 as cv
 def svg2img(svg):
     img_bytes = svg2png(bytestring=svg, scale=1.0)
     return np.array(Image.open(BytesIO(img_bytes)).convert('RGBA'))
