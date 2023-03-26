@@ -10,7 +10,7 @@ from extractletters import extract_letters
 from svgtopng import svg2img
 import os
 from uvicorn import run
-
+import base64
 
 def randomString(length):
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
@@ -38,6 +38,17 @@ async def resolveCaptchaFromSvg(svg: str = Body(..., embed=True)):
     try:
         img = svg2img(svg)
         return {"status": True, "message": "success", "data": predict(img)}
+    except Exception as err:
+        print(err)
+        raise HTTPException(status_code=502, detail='An exception has ocurred.')
+    
+@app.post("/img")
+async def resolveCaptchaFromImg(img: str = Body(..., embed=True)):
+    try:
+        encoded_image = img.split(',')[1]
+        decoded_image = base64.b64decode(encoded_image)
+        image = cv.imdecode(decoded_image)
+        return {"status": True, "message": "success", "data": predict(image)}
     except Exception as err:
         print(err)
         raise HTTPException(status_code=502, detail='An exception has ocurred.')
