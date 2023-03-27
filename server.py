@@ -11,6 +11,7 @@ from svgtopng import svg2img
 import os
 from uvicorn import run
 import base64
+import numpy as np
 
 def randomString(length):
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
@@ -47,7 +48,8 @@ async def resolveCaptchaFromImg(img: str = Body(..., embed=True)):
     try:
         encoded_image = img.split(',')[1]
         decoded_image = base64.b64decode(encoded_image)
-        image = cv.imdecode(decoded_image)
+        np_data = np.fromstring(decoded_image,np.uint8)
+        image = cv.imdecode(np_data, cv.IMREAD_GRAYSCALE)
         return {"status": True, "message": "success", "data": predict(image)}
     except Exception as err:
         print(err)

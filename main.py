@@ -1,9 +1,7 @@
 
 import cv2 as cv
-import matplotlib.pyplot as plt
 from constants import six_character_coordinates
 from raw_predict import raw_predict
-from utils import find_highest_averaged_predictions
 
 def predict(image=None):
     img = image
