@@ -19,7 +19,7 @@ cssselect2==0.7.0
 cycler==0.11.0
 defusedxml==0.7.1
 exceptiongroup==1.1.1
-fastapi==0.92.0
+fastapi==0.109.1
 flatbuffers==23.3.3
 fonttools==4.39.2
 gast==0.4.0
