@@ -91,3 +91,4 @@ Werkzeug==2.2.3
 wrapt==1.15.0
 wsproto==1.2.0
 zstandard==0.20.0
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
