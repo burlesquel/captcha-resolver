@@ -1,4 +1,4 @@
-FROM python:3.10.6
+FROM python:3.14.0rc2
 
 # Maintainer info
 LABEL maintainer="batumanav@gmail.com"
