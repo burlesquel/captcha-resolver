@@ -50,7 +50,7 @@ opt-einsum==3.3.0
 outcome==1.2.0
 packaging==23.0
 Pillow==9.4.0
-protobuf==4.22.1
+protobuf==6.33.5
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycodestyle==2.10.0
@@ -91,3 +91,4 @@ Werkzeug==2.2.3
 wrapt==1.15.0
 wsproto==1.2.0
 zstandard==0.20.0
+wheel>=0.46.2 # not directly required, pinned by Snyk to avoid a vulnerability
